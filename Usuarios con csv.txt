@@ -1,0 +1,41 @@
+!/bin/bash
+
+# Limpio el archivo de errores
+> errores.txt
+
+# Leo el archivo usuarios.csv línea por línea
+while IFS=',' read -r nombre usuario grupos contra; do
+
+  # Verifico si algún campo está vacío
+  if [[ -z "$nombre" || -z "$usuario" || -z "$grupos" || -z "$contra" ]]; then
+    echo "Fila incompleta: nombre: $nombre, usuario: $usuario, grupos: $grupos, contraseña: $contra" >> errores.txt
+    continue
+  fi
+
+  # Verifico si el nombre de usuario es válido (solo letras y números)
+  if [[ ! "$usuario" =~ ^[a-zA-Z0-9]+$ ]]; then
+    echo "El nombre de usuario '$usuario' no es válido (solo letras y números)" >> errores.txt
+    continue
+  fi
+
+  # Verifico si el grupo existe antes de intentar crear el usuario
+  if ! getent group "$grupos" > /dev/null; then
+    echo "Error: Grupo no existente: $grupos" >> errores.txt
+    continue
+  fi
+
+  # Intento crear el usuario
+  if ! useradd -c "$nombre" -g "$grupos" "$usuario"; then
+    echo "Error: Falló al crear el usuario: $usuario" >> errores.txt
+    continue
+  fi
+
+  # Intento asignar la contraseña
+  if ! echo "$usuario:$contra" | chpasswd; then
+    echo "Error: No se pudo asignar contraseña a: $usuario" >> errores.txt
+    continue
+  fi
+
+  echo "Usuario creado correctamente: $usuario"
+
+done < USUARIOS.csv

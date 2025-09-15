@@ -1,0 +1,122 @@
+#!/bin/bash
+declare -i vectores
+
+Ingresarvalores() {
+while true; do
+read -p "Ingresa números separados por espacio: "  -a  vectores
+echo "Los números añadidos son: ${vectores[@]}"
+break
+done
+}
+
+Inverso() {
+while true; do
+echo "Los números añadidos son:" 
+echo " ${vectores[@]}" | rev    
+break
+done 
+}
+
+Mayormenor() {
+while true; do
+echo "Los números ordenados de mayor a menor son:"
+#Con short -nr coloco los números de mayor a menor. 
+ordenar=($(for num in "${vectores[@]}"; do echo "$num"; done | sort -nr)) 
+echo "${ordenar[@]}"
+break
+done
+}
+
+Menormayor() {
+while true; do
+# lo mismo pero con short -n, eso hace que se coloquen de menor a mayor
+echo "Los números ordenados de mayor a menor son:"
+ordenar=($(for num in "${vectores[@]}"; do echo "$num"; done | sort -n)) 
+echo "${ordenar[@]}"
+break
+done 
+}
+
+Sumatotal() {
+while true; do
+# creo suma y le doy valor 0 para que cuando empiece a sumar lo haga partiendo de 0.
+suma=0
+for numero in "${vectores[@]}"; do
+suma=$((suma + numero))
+done
+echo "La suma es $suma"
+break
+done
+}
+
+Pares() {
+pares=0
+for numero in "${vectores[@]}"; do
+if (( numero % 2 == 0 )); then
+#cada vez que se cumple la condición suma al par
+((pares++))
+fi
+done
+echo "Hay $pares números pares "
+}
+
+menu(){
+while true; do
+echo "Menú"
+echo "1.Ingresar valores en un vector"
+echo "2.Mostrar valores en orden inverso"
+echo "3.Ordena de mayor a menor"
+echo "4.Ordena de menor a mayor"
+echo "5.Suma total de todos los elementos"
+echo "6.Cantidad de elementos pares"
+echo "7.Suma de los elementos impares"
+echo "8.Media aritmética de todos los elementos"
+echo "9.Salir"
+read -p "¿Qué quieres hacer?" seleccion
+
+case "$seleccion" in
+
+1)  clear
+    Ingresarvalores ;;
+
+2)  clear
+    Inverso ;;
+
+3)  clear
+    Mayormenor ;;
+
+
+4)  clear
+    Menormayor ;;
+
+
+5)  clear
+    Sumatotal ;;
+
+
+6)  clear
+    Pares ;;
+
+
+7)
+break ;;
+
+
+8)
+break ;;
+
+
+9)
+break ;;
+
+*)
+echo "Entrada inválida" ;;
+
+esac
+done
+
+}
+
+
+
+menu
