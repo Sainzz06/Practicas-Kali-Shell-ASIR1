@@ -4,25 +4,25 @@ declare -i vectores
 Ingresarvalores() {
 while true; do
 read -p "Ingresa números separados por espacio: "  -a  vectores
-echo "Los números añadidos son: ${vectores[@]}"
+echo -e "\e[33mLos números añadidos son: ${vectores[@]}\e[0m"
 break
 done
 }
 
 Inverso() {
 while true; do
-echo "Los números añadidos son:" 
-echo " ${vectores[@]}" | rev    
+echo -e "\e[33mLos números añadidos son:\e[0m" 
+echo -e "\e[33m$(echo -e "${vectores[@]}" | rev)\e[0m"    
 break
 done 
 }
 
 Mayormenor() {
 while true; do
-echo "Los números ordenados de mayor a menor son:"
+echo -e "\e[33mLos números ordenados de mayor a menor son:\e[0m"
 #Con short -nr coloco los números de mayor a menor. 
 ordenar=($(for num in "${vectores[@]}"; do echo "$num"; done | sort -nr)) 
-echo "${ordenar[@]}"
+echo -e "\e[33m${ordenar[@]}\e[0m"
 break
 done
 }
@@ -30,9 +30,9 @@ done
 Menormayor() {
 while true; do
 # lo mismo pero con short -n, eso hace que se coloquen de menor a mayor
-echo "Los números ordenados de mayor a menor son:"
+echo -e "\e[33mLos números ordenados de mayor a menor son:\e[0m"
 ordenar=($(for num in "${vectores[@]}"; do echo "$num"; done | sort -n)) 
-echo "${ordenar[@]}"
+echo -e "\e[33m${ordenar[@]}\e[0m"
 break
 done 
 }
@@ -44,7 +44,7 @@ suma=0
 for numero in "${vectores[@]}"; do
 suma=$((suma + numero))
 done
-echo "La suma es $suma"
+echo -e "\e[33mLa suma es $suma\e[0m"
 break
 done
 }
@@ -57,21 +57,57 @@ if (( numero % 2 == 0 )); then
 ((pares++))
 fi
 done
-echo "Hay $pares números pares "
+echo -e "\e[33mHay $pares números pares\e[0m"
+}
+
+
+Simpares() {
+# se establece el valor de suma y se indica que los valores que dividido 2 no tengan resto 0 se sumarán
+sumai=0
+for numero in "${vectores[@]}"; do
+if (( numero % 2 != 0 )); then
+sumai=$((sumai + numero))
+fi
+done
+echo -e "\e[33mLa suma de los impares es: $sumai\e[0m"
+}
+
+Media() {
+numeros=0 #ahí guardo la cantidad de números
+sumam=0   #se guardará ahí la suma de los números
+media=0   #se guarda el resultado de la media
+for numero in "${vectores[@]}"; do
+sumam=$((sumam + numero))
+((numeros++))
+media=$(( sumam / numeros))
+done  
+echo -e "\e[33mLa media es $media\e[0m"
 }
 
 menu(){
 while true; do
-echo "Menú"
-echo "1.Ingresar valores en un vector"
-echo "2.Mostrar valores en orden inverso"
-echo "3.Ordena de mayor a menor"
-echo "4.Ordena de menor a mayor"
-echo "5.Suma total de todos los elementos"
-echo "6.Cantidad de elementos pares"
-echo "7.Suma de los elementos impares"
-echo "8.Media aritmética de todos los elementos"
-echo "9.Salir"
+echo "---------------------------------------------"
+echo "|                   Menú                    |"
+echo "---------------------------------------------"
+echo "| 1.Ingresar valores en un vector           |"
+echo "---------------------------------------------"
+echo "| 2.Mostrar valores en orden inverso        |"
+echo "---------------------------------------------"
+echo "| 3.Ordena de mayor a menor                 |"
+echo "---------------------------------------------"
+echo "| 4.Ordena de menor a mayor                 |"
+echo "---------------------------------------------"
+echo "| 5.Suma total de todos los elementos       |"
+echo "---------------------------------------------"
+echo "| 6.Cantidad de elementos pares             |"
+echo "---------------------------------------------"
+echo "| 7.Suma de los elementos impares           |"
+echo "---------------------------------------------"
+echo "| 8.Media aritmética de todos los elementos |"
+echo "---------------------------------------------"
+echo "| 9.Salir                                   |"
+echo "---------------------------------------------"
+
 read -p "¿Qué quieres hacer?" seleccion
 
 case "$seleccion" in
@@ -98,19 +134,21 @@ case "$seleccion" in
     Pares ;;
 
 
-7)
-break ;;
+7)  clear
+    Simpares ;;
 
 
-8)
-break ;;
+8)  clear
+    Media ;;
 
 
-9)
+9)  clear
+echo "Adiós"
 break ;;
 
 *)
-echo "Entrada inválida" ;;
+     clear
+     echo -e "\e[33mEntrada inválida\e[0m" ;;
 
 esac
 done
